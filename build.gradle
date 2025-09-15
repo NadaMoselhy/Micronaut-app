@@ -41,8 +41,13 @@ dependencies {
     // Hibernate Validator (runtime implementation)
     implementation 'org.hibernate.validator:hibernate-validator:7.0.5.Final'
 
+    // JUNIT
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
 
     testImplementation("io.micronaut:micronaut-http-client")
+
+    testImplementation("org.mockito:mockito-junit-jupiter:5.19.0")
 }
 
 
@@ -83,4 +88,7 @@ tasks.named("dockerfileNative") {
     jdkVersion = "21"
 }
 
+tasks.named('test') {
+    useJUnitPlatform()
+}
 

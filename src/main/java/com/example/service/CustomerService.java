@@ -3,6 +3,7 @@ package com.example.service;
 import com.example.DTO.CustomerResponseDto;
 import com.example.DTO.CustomerSignUpDto;
 import com.example.entity.Customer;
+import com.example.exception.EmailAlreadyExistsException;
 import com.example.repository.CustomerRepository;
 import com.example.utils.BCryptPasswordEncoder;
 import io.micronaut.http.server.exceptions.NotFoundException;
@@ -40,13 +41,20 @@ public class CustomerService {
     }
 
     @Transactional
-    public CustomerResponseDto createCustomer(CustomerSignUpDto customerDto){
-        String hashedPassword = passwordEncoder.encode(customerDto.getPassword());
-        Customer newCustomer = new Customer().fromDto(customerDto);
-        newCustomer.setPassword(hashedPassword);
-        Customer returnedCustomer = customerRepository.save(newCustomer);
+    public Customer createCustomer(CustomerSignUpDto customerDto){
 
-        return returnedCustomer.toDTO();
+        boolean exists = customerRepository.existsByEmail(customerDto.getEmail());
+        if(exists){
+            throw new EmailAlreadyExistsException(customerDto.getEmail());
+        }
+        else {
+            String hashedPassword = passwordEncoder.encode(customerDto.getPassword());
+            Customer newCustomer = new Customer().fromDto(customerDto);
+            newCustomer.setPassword(hashedPassword);
+
+
+            return customerRepository.save(newCustomer);
+        }
     }
 
     public void deleteCustomer(Long id){

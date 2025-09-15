@@ -3,6 +3,7 @@ package com.example.controller;
 import com.example.DTO.CustomerResponseDto;
 import com.example.DTO.CustomerSignUpDto;
 import com.example.service.CustomerService;
+import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
@@ -19,13 +20,13 @@ public class CustomerController {
 
     @Post("/signup")
     @Secured(SecurityRule.IS_ANONYMOUS)
-    public CustomerResponseDto signUp(@Body CustomerSignUpDto customerSignUpDto){
-       return customerService.createCustomer(customerSignUpDto);
+    public HttpResponse<CustomerResponseDto> signUp(@Body CustomerSignUpDto customerSignUpDto){
+       return HttpResponse.created(customerService.createCustomer(customerSignUpDto).toDTO());
     }
 
     @Get("/{id}")
     @Secured(SecurityRule.IS_ANONYMOUS)
-    public CustomerResponseDto findCustomerById(Long id){
+    public  CustomerResponseDto findCustomerById(Long id){
         return customerService.findCustomerById(id);
     }
 
