@@ -1,14 +1,12 @@
 package com.example.controller;
 
-import com.example.DTO.CustomerResponseDto;
-import com.example.DTO.CustomerSignUpDto;
+import com.example.dto.CustomerResponseDto;
+import com.example.dto.CustomerSignUpDto;
 import com.example.service.CustomerService;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
-
-import java.util.List;
 
 @Controller("/v1/customer")
 public class CustomerController {

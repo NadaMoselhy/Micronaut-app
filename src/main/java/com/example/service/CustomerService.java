@@ -1,12 +1,12 @@
 package com.example.service;
 
-import com.example.DTO.CustomerResponseDto;
-import com.example.DTO.CustomerSignUpDto;
+import com.example.dto.CustomerResponseDto;
+import com.example.dto.CustomerSignUpDto;
 import com.example.entity.Customer;
+import com.example.exception.CustomerNotFoundException;
 import com.example.exception.EmailAlreadyExistsException;
 import com.example.repository.CustomerRepository;
 import com.example.utils.BCryptPasswordEncoder;
-import io.micronaut.http.server.exceptions.NotFoundException;
 import jakarta.inject.Singleton;
 import jakarta.transaction.Transactional;
 
@@ -34,8 +34,7 @@ public class CustomerService {
             return foundCustomer.toDTO();
         }
         else{
-            // search for the exception part (akeed hatb2a try and catch)
-            throw new NotFoundException();
+           throw new CustomerNotFoundException(id);
         }
 
     }

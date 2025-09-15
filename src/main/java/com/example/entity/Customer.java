@@ -1,7 +1,7 @@
 package com.example.entity;
 
-import com.example.DTO.CustomerResponseDto;
-import com.example.DTO.CustomerSignUpDto;
+import com.example.dto.CustomerResponseDto;
+import com.example.dto.CustomerSignUpDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.*;

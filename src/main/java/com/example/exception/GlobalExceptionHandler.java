@@ -21,6 +21,14 @@ public class GlobalExceptionHandler implements ExceptionHandler<RuntimeException
                     )
             );
         }
+        else if(e instanceof  CustomerNotFoundException ex){
+            return HttpResponse.status(HttpStatus.NOT_FOUND).body(
+                    Map.of(
+                            "error" , "customer does not exist",
+                            "id" , ex.getId()
+                    )
+            );
+        }
         return HttpResponse.serverError(
                 Map.of("error", e.getMessage())
         );

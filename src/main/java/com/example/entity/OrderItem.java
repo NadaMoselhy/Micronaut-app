@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Order_item {
+public class OrderItem {
     @EmbeddedId
     private OrderItemId id;
 

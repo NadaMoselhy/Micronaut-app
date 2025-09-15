@@ -1,12 +1,11 @@
 package com.example;
 
-import com.example.DTO.CustomerResponseDto;
-import com.example.DTO.CustomerSignUpDto;
+import com.example.dto.CustomerResponseDto;
+import com.example.dto.CustomerSignUpDto;
 import com.example.controller.CustomerController;
 import com.example.entity.Customer;
 import com.example.exception.EmailAlreadyExistsException;
 import com.example.service.CustomerService;
-import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.client.HttpClient;
