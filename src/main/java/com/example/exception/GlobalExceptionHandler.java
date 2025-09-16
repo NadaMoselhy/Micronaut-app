@@ -8,6 +8,8 @@ import jakarta.inject.Singleton;
 
 import java.util.Map;
 
+@Produces
+@Singleton
 public class GlobalExceptionHandler implements ExceptionHandler<RuntimeException, HttpResponse<?>> {
 
 

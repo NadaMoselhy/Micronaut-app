@@ -13,6 +13,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.persistence.OneToMany;
 
 import java.util.HashSet;
+import java.util.Set;
 
 @Serdeable
 @Entity
@@ -45,7 +46,7 @@ public class Customer {
 
     @JsonIgnore
     @OneToMany(mappedBy = "customer")
-    HashSet<Order> orders = new HashSet<>();
+    Set<Order> orders = new HashSet<>();
 
 
 
