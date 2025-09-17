@@ -9,6 +9,7 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
+import io.micronaut.data.model.Page;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -36,9 +37,12 @@ public class CustomerController {
 
     @Get()
     @Secured(SecurityRule.IS_ANONYMOUS)
-    public ArrayList<CustomerResponseDto> findAll() {
-
-        return customerService.getAllCustomers().stream().map(Customer::toDTO).collect(Collectors.toCollection(ArrayList::new));
+    public HttpResponse<Page<CustomerResponseDto>> findAll(
+            @QueryValue(defaultValue = "0") int page,
+            @QueryValue(defaultValue = "10") int size
+    ) {
+        Page<Customer> customers = customerService.getAllCustomers(page,size);
+        return HttpResponse.ok(customers.map(Customer::toDTO));
 
     }
 

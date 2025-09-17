@@ -4,7 +4,8 @@ import com.example.entity.Customer;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.data.annotation.Repository;
 import io.micronaut.data.repository.CrudRepository;
-
+import io.micronaut.data.model.Page;
+import io.micronaut.data.model.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +15,7 @@ public interface CustomerRepository extends CrudRepository<Customer, Long> {
     @NonNull
     Optional<Customer> findById(Long id);
 
-    ArrayList<Customer> findAll();
+    Page<Customer> findAll(Pageable pageable );
 
     Customer findByEmail(String email);
 

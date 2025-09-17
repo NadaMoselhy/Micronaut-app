@@ -7,7 +7,10 @@ import com.example.entity.Customer;
 import com.example.exception.CustomerNotFoundException;
 import com.example.exception.EmailAlreadyExistsException;
 import com.example.repository.CustomerRepository;
+import com.example.repository.CustomerRepositoryFacade;
 import com.example.utils.BCryptPasswordEncoder;
+import io.micronaut.data.model.Page;
+import io.micronaut.data.model.Pageable;
 import jakarta.inject.Singleton;
 import jakarta.transaction.Transactional;
 
@@ -22,24 +25,19 @@ import java.util.stream.Collectors;
 // the service should be a singleton so it gets injected in the controller as a bean and also so that micronaut
 // only creates a single instance for the whole app
 public class CustomerService {
-    private final CustomerRepository customerRepository;
+    private final CustomerRepositoryFacade customerRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
 
-    public CustomerService(CustomerRepository customerRepository, BCryptPasswordEncoder passwordEncoder) {
+    public CustomerService(CustomerRepositoryFacade customerRepository, BCryptPasswordEncoder passwordEncoder) {
         this.customerRepository = customerRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     public CustomerResponseDto findCustomerById(Long id) {
-        Optional<Customer> result = customerRepository.findById(id);
+        Customer result = customerRepository.findById(id);
 
-        if (result.isPresent()) {
-            Customer foundCustomer = result.get();
-            return foundCustomer.toDTO();
-        } else {
-            throw new CustomerNotFoundException(id);
-        }
+            return result.toDTO();
 
     }
 
@@ -69,11 +67,11 @@ public class CustomerService {
 
     @Transactional
     public Customer updateCustomer(long id, CustomerUpdateDto customerUpdateDto) {
-        Optional<Customer> customer = customerRepository.findById(id);
-        if (customer.isPresent()) {
+        Customer existingCustomer = customerRepository.findById(id);
+
             // update the email
             String newEmail = customerUpdateDto.getEmail();
-            Customer existingCustomer = customer.get();
+
             if (newEmail != null && !newEmail.equals(existingCustomer.getEmail())) {
                 if (customerRepository.existsByEmail(newEmail)) {
                     throw new EmailAlreadyExistsException(newEmail);
@@ -91,14 +89,12 @@ public class CustomerService {
                 existingCustomer.setPassword(hashedPassword);
             }
             return customerRepository.update(existingCustomer);
-        } else {
-            throw new CustomerNotFoundException(id);
-        }
+
     }
 
     @Transactional
-    public ArrayList<Customer> getAllCustomers() {
-        return customerRepository.findAll();
+    public Page<Customer> getAllCustomers(int page, int size) {
+        return customerRepository.findAll(Pageable.from(page,size));
     }
 
 }
