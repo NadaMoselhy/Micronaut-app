@@ -1,27 +1,19 @@
 package com.example.service;
 
-import com.example.dto.CustomerResponseDto;
-import com.example.dto.CustomerSignUpDto;
-import com.example.dto.CustomerUpdateDto;
-import com.example.entity.Customer;
+import com.example.model.dto.CustomerResponseDto;
+import com.example.model.dto.CustomerSignUpDto;
+import com.example.model.dto.CustomerUpdateDto;
+import com.example.model.entity.Customer;
 import com.example.event.CustomerCreatedEvent;
-import com.example.exception.CustomerNotFoundException;
 import com.example.exception.EmailAlreadyExistsException;
+import com.example.model.mapper.CustomerMapper;
 import com.example.producer.CustomerEventProducer;
-import com.example.repository.CustomerRepository;
 import com.example.repository.CustomerRepositoryFacade;
 import com.example.utils.BCryptPasswordEncoder;
 import io.micronaut.data.model.Page;
 import io.micronaut.data.model.Pageable;
 import jakarta.inject.Singleton;
 import jakarta.transaction.Transactional;
-
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 @Singleton
 // the service should be a singleton so it gets injected in the controller as a bean and also so that micronaut
@@ -32,16 +24,19 @@ public class CustomerService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final CustomerEventProducer customerEventProducer;
 
-    public CustomerService(CustomerRepositoryFacade customerRepository, BCryptPasswordEncoder passwordEncoder, CustomerEventProducer customerEventProducer) {
+    private final CustomerMapper mapper;
+
+    public CustomerService(CustomerRepositoryFacade customerRepository, BCryptPasswordEncoder passwordEncoder, CustomerEventProducer customerEventProducer, CustomerMapper mapper) {
         this.customerRepository = customerRepository;
         this.passwordEncoder = passwordEncoder;
         this.customerEventProducer = customerEventProducer;
+        this.mapper = mapper;
     }
 
     public CustomerResponseDto findCustomerById(Long id) {
         Customer result = customerRepository.findById(id);
 
-            return result.toDTO();
+            return mapper.toDto(result);
 
     }
 
@@ -53,7 +48,7 @@ public class CustomerService {
             throw new EmailAlreadyExistsException(customerDto.getEmail());
         } else {
             String hashedPassword = passwordEncoder.encode(customerDto.getPassword());
-            Customer newCustomer = new Customer().fromDto(customerDto);
+            Customer newCustomer = mapper.fromSignupDto(customerDto);
             newCustomer.setPassword(hashedPassword);
 
 
@@ -91,12 +86,8 @@ public class CustomerService {
                 }
                 existingCustomer.setEmail(newEmail);
             }
-            if (customerUpdateDto.getName() != null) {
-                existingCustomer.setName(customerUpdateDto.getName());
-            }
-            if (customerUpdateDto.getPhoneNumber() != null) {
-                existingCustomer.setPhoneNumber(customerUpdateDto.getPhoneNumber());
-            }
+            mapper.updateCustomerFromDto(customerUpdateDto,existingCustomer);
+
             if (customerUpdateDto.getPassword() != null) {
                 String hashedPassword = passwordEncoder.encode(customerUpdateDto.getPassword());
                 existingCustomer.setPassword(hashedPassword);

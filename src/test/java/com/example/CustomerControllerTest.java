@@ -1,9 +1,9 @@
 package com.example;
 
-import com.example.dto.CustomerResponseDto;
-import com.example.dto.CustomerSignUpDto;
+import com.example.model.dto.CustomerResponseDto;
+import com.example.model.dto.CustomerSignUpDto;
 import com.example.controller.CustomerController;
-import com.example.entity.Customer;
+import com.example.model.entity.Customer;
 import com.example.exception.EmailAlreadyExistsException;
 import com.example.service.CustomerService;
 import io.micronaut.http.HttpResponse;

@@ -58,7 +58,7 @@ dependencies {
     implementation("org.slf4j:slf4j-api:2.0.13")
 
     // Logback (actual logging implementation)
-    runtimeOnly("ch.qos.logback:logback-classic:1.4.14")
+    runtimeOnly('ch.qos.logback:logback-classic:1.5.13')
     implementation("com.fasterxml.jackson.core:jackson-databind")
 
     annotationProcessor("io.micronaut:micronaut-http-validation")
@@ -68,6 +68,11 @@ dependencies {
     compileOnly("io.micronaut:micronaut-http-client")
     runtimeOnly("ch.qos.logback:logback-classic")
     testImplementation("io.micronaut:micronaut-http-client")
+
+    implementation 'org.mapstruct:mapstruct:1.6.3'
+
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
+    annotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
 }
 
 

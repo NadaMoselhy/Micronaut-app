@@ -1,9 +1,10 @@
 package com.example.controller;
 
-import com.example.dto.CustomerResponseDto;
-import com.example.dto.CustomerSignUpDto;
-import com.example.dto.CustomerUpdateDto;
-import com.example.entity.Customer;
+import com.example.model.dto.CustomerResponseDto;
+import com.example.model.dto.CustomerSignUpDto;
+import com.example.model.dto.CustomerUpdateDto;
+import com.example.model.entity.Customer;
+import com.example.model.mapper.CustomerMapper;
 import com.example.service.CustomerService;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
@@ -11,22 +12,21 @@ import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.data.model.Page;
 
-import java.util.ArrayList;
-import java.util.stream.Collectors;
-
 @Controller("/v1/customer")
 public class CustomerController {
 
     private final CustomerService customerService;
+    private final CustomerMapper mapper;
 
-    public CustomerController(CustomerService customerService) {
+    public CustomerController(CustomerService customerService, CustomerMapper mapper) {
         this.customerService = customerService;
+        this.mapper = mapper;
     }
 
     @Post("/signup")
     @Secured(SecurityRule.IS_ANONYMOUS)
     public HttpResponse<CustomerResponseDto> signUp(@Body CustomerSignUpDto customerSignUpDto) {
-        return HttpResponse.created(customerService.createCustomer(customerSignUpDto).toDTO());
+        return HttpResponse.created(mapper.toDto(customerService.createCustomer(customerSignUpDto)));
     }
 
     @Get("/{id}")
@@ -42,7 +42,7 @@ public class CustomerController {
             @QueryValue(defaultValue = "10") int size
     ) {
         Page<Customer> customers = customerService.getAllCustomers(page,size);
-        return HttpResponse.ok(customers.map(Customer::toDTO));
+        return HttpResponse.ok(customers.map(c -> mapper.toDto(c)));
 
     }
 
@@ -58,7 +58,7 @@ public class CustomerController {
     @Secured(SecurityRule.IS_ANONYMOUS)
     public HttpResponse<CustomerResponseDto> updateCustomer(@PathVariable Long id,
                                                             @Body CustomerUpdateDto customerUpdateDto) {
-        return HttpResponse.ok(customerService.updateCustomer(id, customerUpdateDto).toDTO());
+        return HttpResponse.ok(mapper.toDto(customerService.updateCustomer(id, customerUpdateDto)));
 
     }
 

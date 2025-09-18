@@ -1,4 +1,4 @@
-package com.example.dto;
+package com.example.model.dto;
 
 import io.micronaut.serde.annotation.Serdeable;
 import lombok.AllArgsConstructor;

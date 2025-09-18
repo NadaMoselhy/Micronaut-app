@@ -1,7 +1,7 @@
-package com.example.entity;
+package com.example.model.entity;
 
-import com.example.dto.CustomerResponseDto;
-import com.example.dto.CustomerSignUpDto;
+import com.example.model.dto.CustomerResponseDto;
+import com.example.model.dto.CustomerSignUpDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.*;
@@ -58,12 +58,5 @@ public class Customer {
                 .build();
     }
 
-    public Customer fromDto(CustomerSignUpDto customerSignUpDto){
-        return Customer.builder()
-                .email(customerSignUpDto.getEmail())
-                .phoneNumber(customerSignUpDto.getPhoneNumber())
-                .name(customerSignUpDto.getName())
-                .build();
-    }
 
 }

@@ -1,13 +1,12 @@
 package com.example.repository;
 
-import com.example.entity.Customer;
+import com.example.model.entity.Customer;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.data.annotation.Repository;
 import io.micronaut.data.repository.CrudRepository;
 import io.micronaut.data.model.Page;
 import io.micronaut.data.model.Pageable;
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Optional;
 
 @Repository

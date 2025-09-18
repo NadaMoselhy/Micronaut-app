@@ -1,6 +1,6 @@
 package com.example.repository;
 import io.micronaut.data.model.Page;
-import com.example.entity.Customer;
+import com.example.model.entity.Customer;
 import com.example.exception.CustomerNotFoundException;
 import io.micronaut.data.model.Pageable;
 import jakarta.inject.Singleton;
