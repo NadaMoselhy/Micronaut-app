@@ -4,8 +4,10 @@ import com.example.dto.CustomerResponseDto;
 import com.example.dto.CustomerSignUpDto;
 import com.example.dto.CustomerUpdateDto;
 import com.example.entity.Customer;
+import com.example.event.CustomerCreatedEvent;
 import com.example.exception.CustomerNotFoundException;
 import com.example.exception.EmailAlreadyExistsException;
+import com.example.producer.CustomerEventProducer;
 import com.example.repository.CustomerRepository;
 import com.example.repository.CustomerRepositoryFacade;
 import com.example.utils.BCryptPasswordEncoder;
@@ -25,13 +27,15 @@ import java.util.stream.Collectors;
 // the service should be a singleton so it gets injected in the controller as a bean and also so that micronaut
 // only creates a single instance for the whole app
 public class CustomerService {
+
     private final CustomerRepositoryFacade customerRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final CustomerEventProducer customerEventProducer;
 
-
-    public CustomerService(CustomerRepositoryFacade customerRepository, BCryptPasswordEncoder passwordEncoder) {
+    public CustomerService(CustomerRepositoryFacade customerRepository, BCryptPasswordEncoder passwordEncoder, CustomerEventProducer customerEventProducer) {
         this.customerRepository = customerRepository;
         this.passwordEncoder = passwordEncoder;
+        this.customerEventProducer = customerEventProducer;
     }
 
     public CustomerResponseDto findCustomerById(Long id) {
@@ -53,7 +57,16 @@ public class CustomerService {
             newCustomer.setPassword(hashedPassword);
 
 
-            return customerRepository.save(newCustomer);
+            Customer createdCustomer = customerRepository.save(newCustomer);
+
+            customerEventProducer.sendCustomerInfo(
+                    "customer-"+createdCustomer.getId(),
+                    CustomerCreatedEvent.builder().customerId(createdCustomer.getId())
+                            .email(createdCustomer.getEmail())
+                            .name(createdCustomer.getName()).build()
+            );
+
+            return createdCustomer;
         }
     }
 

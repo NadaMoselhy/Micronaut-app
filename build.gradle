@@ -59,11 +59,11 @@ dependencies {
 
     // Logback (actual logging implementation)
     runtimeOnly("ch.qos.logback:logback-classic:1.4.14")
+    implementation("com.fasterxml.jackson.core:jackson-databind")
 
     annotationProcessor("io.micronaut:micronaut-http-validation")
     annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
     implementation("io.micronaut.kafka:micronaut-kafka")
-    implementation("io.micronaut.kafka:micronaut-kafka-streams")
     implementation("io.micronaut.serde:micronaut-serde-jackson")
     compileOnly("io.micronaut:micronaut-http-client")
     runtimeOnly("ch.qos.logback:logback-classic")
