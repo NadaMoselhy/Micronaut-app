@@ -1,7 +1,5 @@
 package com.example.model.entity;
 
-import com.example.model.dto.CustomerResponseDto;
-import com.example.model.dto.CustomerSignUpDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.*;
