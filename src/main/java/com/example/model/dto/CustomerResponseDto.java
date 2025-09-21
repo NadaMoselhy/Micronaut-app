@@ -1,7 +1,6 @@
-package com.example.DTO;
+package com.example.model.dto;
 
 import io.micronaut.serde.annotation.Serdeable;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

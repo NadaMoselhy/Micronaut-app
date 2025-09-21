@@ -1,37 +1,29 @@
-package com.example.DTO;
+package com.example.model.dto;
 
-import com.example.entity.Customer;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Serdeable
-@Builder
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerSignUpDto {
+@Serdeable
+public class CustomerUpdateDto {
 
-    @NotBlank
     private String name;
 
-    @NotBlank
-    @Email(message = "email should be a valid email")
+    @Email(message = "Email must be valid")
     private String email;
 
-    @NotBlank
-    @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password;
 
-    @NotBlank
+    @Size(min = 8, message = "Password must be at least 8 characters")
     private String phoneNumber;
-
-
-
 
 }

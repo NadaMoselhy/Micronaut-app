@@ -1,4 +1,4 @@
-package com.example.entity;
+package com.example.model.entity;
 
 
 import io.micronaut.serde.annotation.Serdeable;
@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Order_item {
+public class OrderItem {
     @EmbeddedId
     private OrderItemId id;
 

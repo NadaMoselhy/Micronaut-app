@@ -1,7 +1,7 @@
-package com.example.entity;
+package com.example.model.entity;
 
-import com.example.DTO.CustomerResponseDto;
-import com.example.DTO.CustomerSignUpDto;
+import com.example.model.dto.CustomerResponseDto;
+import com.example.model.dto.CustomerSignUpDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.*;
@@ -13,6 +13,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.persistence.OneToMany;
 
 import java.util.HashSet;
+import java.util.Set;
 
 @Serdeable
 @Entity
@@ -45,24 +46,8 @@ public class Customer {
 
     @JsonIgnore
     @OneToMany(mappedBy = "customer")
-    HashSet<Order> orders = new HashSet<>();
+    Set<Order> orders = new HashSet<>();
 
 
-
-    public CustomerResponseDto toDTO() {
-        return CustomerResponseDto.builder()
-                .id(this.id)
-                .name(this.name)
-                .email(this.email)
-                .build();
-    }
-
-    public Customer fromDto(CustomerSignUpDto customerSignUpDto){
-        return Customer.builder()
-                .email(customerSignUpDto.getEmail())
-                .phoneNumber(customerSignUpDto.getPhoneNumber())
-                .name(customerSignUpDto.getName())
-                .build();
-    }
 
 }

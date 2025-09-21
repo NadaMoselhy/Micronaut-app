@@ -1,7 +1,10 @@
 plugins {
     id("io.micronaut.application") version "4.5.4"
+    id("io.micronaut.docker") version "4.5.4"
     id("com.gradleup.shadow") version "8.3.7"
     id("io.micronaut.aot") version "4.5.4"
+    id "org.sonarqube" version "3.4.0.2513"
+    id("jacoco")
 }
 
 version = "0.1"
@@ -15,6 +18,8 @@ dependencies {
     annotationProcessor("io.micronaut.data:micronaut-data-processor")
     annotationProcessor("io.micronaut:micronaut-http-validation")
     annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
+    implementation("io.micronaut.kafka:micronaut-kafka")
+    implementation("io.micronaut.serde:micronaut-serde-jackson")
     implementation("io.micronaut.data:micronaut-data-hibernate-jpa")
     implementation("io.micronaut.data:micronaut-data-tx-hibernate")
     implementation("io.micronaut.serde:micronaut-serde-jackson")
@@ -41,11 +46,46 @@ dependencies {
     // Hibernate Validator (runtime implementation)
     implementation 'org.hibernate.validator:hibernate-validator:7.0.5.Final'
 
+    // JUNIT
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
 
     testImplementation("io.micronaut:micronaut-http-client")
+
+    testImplementation("org.mockito:mockito-junit-jupiter:5.19.0")
+
+    // SLF4J API (facade)
+    implementation("org.slf4j:slf4j-api:2.0.13")
+
+    // Logback (actual logging implementation)
+    runtimeOnly('ch.qos.logback:logback-classic:1.5.13')
+    implementation("com.fasterxml.jackson.core:jackson-databind")
+
+    annotationProcessor("io.micronaut:micronaut-http-validation")
+    annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
+    implementation("io.micronaut.kafka:micronaut-kafka")
+    implementation("io.micronaut.serde:micronaut-serde-jackson")
+    compileOnly("io.micronaut:micronaut-http-client")
+    runtimeOnly("ch.qos.logback:logback-classic")
+    testImplementation("io.micronaut:micronaut-http-client")
+
+    implementation 'org.mapstruct:mapstruct:1.6.3'
+
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
+    annotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
+
+    //JMS
+    implementation("io.micronaut.jms:micronaut-jms-activemq-classic")
+    implementation("jakarta.jms:jakarta.jms-api:3.0.0")
+    runtimeOnly("org.apache.activemq:activemq-client:5.17.6")
+    implementation("io.micronaut:micronaut-runtime")
+
+    //for yml
+    runtimeOnly("org.yaml:snakeyaml:2.0")
+
+
+
 }
-
-
 application {
     mainClass = "com.example.Application"
 }
@@ -78,9 +118,44 @@ micronaut {
     }
 }
 
+jacoco {
+    toolVersion = "0.8.11" // latest stable as of now
+}
+
+tasks.named("dockerfileNative") {
+    jdkVersion = "21"
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+tasks.test {
+    useJUnitPlatform() // you already have this most likely
+    finalizedBy(tasks.jacocoTestReport) // Generate report after running tests
+}
 
 tasks.named("dockerfileNative") {
     jdkVersion = "21"
 }
 
 
+tasks.jacocoTestReport {
+    dependsOn(tasks.test) // Run tests before generating report
+
+    reports {
+        xml.required.set(true) // Needed for CI tools like SonarQube
+        html.required.set(true) // Openable in browser
+    }
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "your-project-key"
+        property "sonar.organization", "your-org-key"  // optional, if using SonarCloud
+        property "sonar.host.url", "http://localhost:9000" // SonarQube server URL
+        property "sonar.login", "your_token_here"
+        property "sonar.java.coveragePlugin", "jacoco"
+        property "sonar.jacoco.reportPaths", "${buildDir}/jacoco/test.exec"
+    }
+}
