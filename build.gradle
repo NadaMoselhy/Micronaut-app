@@ -73,9 +73,19 @@ dependencies {
 
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
     annotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
+
+    //JMS
+    implementation("io.micronaut.jms:micronaut-jms-activemq-classic")
+    implementation("jakarta.jms:jakarta.jms-api:3.0.0")
+    runtimeOnly("org.apache.activemq:activemq-client:5.17.6")
+    implementation("io.micronaut:micronaut-runtime")
+
+    //for yml
+    runtimeOnly("org.yaml:snakeyaml:2.0")
+
+
+
 }
-
-
 application {
     mainClass = "com.example.Application"
 }

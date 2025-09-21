@@ -50,13 +50,4 @@ public class Customer {
 
 
 
-    public CustomerResponseDto toDTO() {
-        return CustomerResponseDto.builder()
-                .id(this.id)
-                .name(this.name)
-                .email(this.email)
-                .build();
-    }
-
-
 }

@@ -1,4 +1,9 @@
 services:
+  activemq:
+    image: rmohr/activemq:latest
+    ports:
+      - "61616:61616"  # JMS port
+      - "8161:8161"
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
     container_name: zookeeper

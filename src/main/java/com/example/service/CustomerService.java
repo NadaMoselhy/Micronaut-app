@@ -1,5 +1,6 @@
 package com.example.service;
 
+import com.example.jms.JmsCustomerProducer;
 import com.example.model.dto.CustomerResponseDto;
 import com.example.model.dto.CustomerSignUpDto;
 import com.example.model.dto.CustomerUpdateDto;
@@ -23,13 +24,15 @@ public class CustomerService {
     private final CustomerRepositoryFacade customerRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final CustomerEventProducer customerEventProducer;
+    private final JmsCustomerProducer jmsCustomerProducer;
 
     private final CustomerMapper mapper;
 
-    public CustomerService(CustomerRepositoryFacade customerRepository, BCryptPasswordEncoder passwordEncoder, CustomerEventProducer customerEventProducer, CustomerMapper mapper) {
+    public CustomerService(CustomerRepositoryFacade customerRepository, BCryptPasswordEncoder passwordEncoder, CustomerEventProducer customerEventProducer, JmsCustomerProducer jmsCustomerProducer, CustomerMapper mapper) {
         this.customerRepository = customerRepository;
         this.passwordEncoder = passwordEncoder;
         this.customerEventProducer = customerEventProducer;
+        this.jmsCustomerProducer = jmsCustomerProducer;
         this.mapper = mapper;
     }
 
@@ -60,6 +63,9 @@ public class CustomerService {
                             .email(createdCustomer.getEmail())
                             .name(createdCustomer.getName()).build()
             );
+
+        jmsCustomerProducer.sendCreatedCustomerMessage("created customer with email : " + customerDto.getEmail());
+
 
             return createdCustomer;
         }
