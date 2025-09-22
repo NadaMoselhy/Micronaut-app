@@ -3,6 +3,7 @@ package com.example.model.entity;
 
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,6 +27,14 @@ public class OrderItem {
     @ManyToOne
     @MapsId("item_id")
     private Item item;
+
+    @NotNull
+    @Column(name = "quantity", nullable = false)
+    private int quantity;
+
+    @NotNull
+    @Column(name = "quantity", nullable = false)
+    private double price;
 
 
 

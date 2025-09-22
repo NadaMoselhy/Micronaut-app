@@ -30,5 +30,12 @@ public class Item {
     @Column(name = "price" , nullable = false)
     private long price;
 
+    @Column(name = "description")
+    private String description;
+
+    @NotNull
+    @Column(name = "price" , nullable = false)
+    private String category;
+
 
 }

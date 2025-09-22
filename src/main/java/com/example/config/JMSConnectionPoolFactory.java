@@ -1,4 +1,4 @@
-package example.micronaut.config;
+package com.example.config;
 
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.jms.pool.JMSConnectionPool;
